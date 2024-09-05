@@ -22,7 +22,7 @@ export const checkRole = (role) => {
   return (req, res, next) => {
     try {
       //Checks the role to see if authorized to continue
-      if (role === "admin") {
+      if (req.role === role) {
         console.log("user authorized");
         next();
       } else {
