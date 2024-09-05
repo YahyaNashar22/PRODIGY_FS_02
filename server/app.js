@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import bodyParser from 'body-parser';
 
 import dbConnection from './db/dbConnection.js';
+import employeeRouter from './routes/employeeRoute.js';
 
 dotenv.config();
 const app = express();
@@ -21,6 +22,9 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Routes for managing models
+app.use('/employee', employeeRouter)
 
 
 app.listen(process.env.PORT, (error) => {

@@ -13,44 +13,19 @@ const employeeSchema = new Schema({
     },
     phoneNumber: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     position: {
         type: String,
         required: true,
+        enum: ['Manager', 'Developer', 'Designer', 'QA', 'HR', 'Sales'],
+        message: '{VALUE} is not a valid position'
     },
     baseSalary: {
         type: Number,
         required: true
-    },
-    monthlyHours: [{
-        year: {
-            type: Number,
-            required: true
-        },
-        month: {
-            type: String,
-            required: true
-        },
-        hours: {
-            type: Number,
-            required: true
-        }
-    }],
-    monthlySalary: [{
-        year: {
-            type: Number,
-            required: true
-        },
-        month: {
-            type: String,
-            required: true
-        },
-        salary: {
-            type: Number,
-            required: true
-        }
-    }]
+    }
 })
 
 const Employee = mongoose.model('Employee', employeeSchema)
