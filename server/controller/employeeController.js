@@ -76,7 +76,7 @@ export const getEmployeeById = async (req, res) => {
 // Get all employees
 export const getAllEmployees = async (req, res) => {
     try {
-        const employees = await Employee.find({});
+        const employees = await Employee.find({}).sort({ createdAt: -1 });
         if (!employees || employees.length == 0) return res.status(404).json({ message: "no employees found" });
         res.status(200).json({
             message: "employees fetched successfully",

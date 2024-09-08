@@ -4,12 +4,12 @@ import { authorized, checkRole } from "../middleware/authorization.js";
 
 const employeeRouter = express.Router();
 
-employeeRouter.post('/create', authorized, checkRole('admin'), createEmployee);
-employeeRouter.get('/getall', authorized, checkRole('admin'), getAllEmployees);
-employeeRouter.get('/get/:id', authorized, checkRole('admin'), getEmployeeById);
-employeeRouter.put('/edit/:id', authorized, checkRole('admin'), editEmployee);
-employeeRouter.delete('/delete/:id', authorized, checkRole('admin'), deleteEmployee);
-employeeRouter.post('/search', authorized, checkRole('admin'), searchEmployee);
-employeeRouter.post('/filter', authorized, checkRole('admin'), filterEmployeesByPosition);
+employeeRouter.post('/create', createEmployee);
+employeeRouter.get('/getall', getAllEmployees);
+employeeRouter.get('/get/:id', getEmployeeById);
+employeeRouter.put('/edit/:id', editEmployee);
+employeeRouter.delete('/delete/:id', deleteEmployee);
+employeeRouter.post('/search', searchEmployee);
+employeeRouter.post('/filter', filterEmployeesByPosition);
 
 export default employeeRouter;
