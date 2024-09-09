@@ -45,6 +45,8 @@ const Dashboard = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar state
   const [snackbarMessage, setSnackbarMessage] = useState(""); // Snackbar message
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterPosition, setFilterPosition] = useState("");
   const [newEmployee, setNewEmployee] = useState({
     firstName: "",
     lastName: "",
@@ -73,16 +75,43 @@ const Dashboard = () => {
 
   const fetchEmployees = async () => {
     setLoading(true);
-    await axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/employee/getall`)
-      .then((result) => setEmployees(result.data.payload))
-      .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
-  };
+    let result;
+    try {
+      if (searchQuery.length > 0) {
+        result = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/employee/search`,
+          { searchQuery }
+        );
+        console.log(result);
+      } else if (filterPosition) {
+        result = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/employee/filter`,
+          { filterQuery: filterPosition }
+        );
+      } else {
+        result = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/employee/getall`
+        );
+      }
 
+      setEmployees(result.data.payload);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     fetchEmployees();
-  }, [user, router, setUser]);
+  }, [user, router, setUser, searchQuery, filterPosition]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleFilterChange = (e) => {
+    setFilterPosition(e.target.value);
+  };
 
   const handleEditClick = (employee) => {
     setSelectedEmployee(employee);
@@ -208,6 +237,35 @@ const Dashboard = () => {
         >
           Create Employee
         </Button>
+
+        <div className=" flex items-center justify-end">
+          {/* Search Bar */}
+          <TextField
+            label="Search Employees"
+            variant="outlined"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            sx={{ margin: "40px 20px" }}
+          />
+
+          {/* Position Filter */}
+          <FormControl margin="dense" sx={{ margin: "20px", width: "10%" }}>
+            <InputLabel>Filter by Position</InputLabel>
+            <Select
+              value={filterPosition}
+              onChange={handleFilterChange}
+              label="Filter by Position"
+            >
+              <MenuItem value="">All Positions</MenuItem>
+              <MenuItem value="Manager">Manager</MenuItem>
+              <MenuItem value="Developer">Developer</MenuItem>
+              <MenuItem value="Designer">Designer</MenuItem>
+              <MenuItem value="QA">QA</MenuItem>
+              <MenuItem value="HR">HR</MenuItem>
+              <MenuItem value="Sales">Sales</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
 
         {loading ? ( // Show spinner when loading is true
           <Box display="flex" justifyContent="center" padding={4}>
